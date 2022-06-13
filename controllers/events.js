@@ -6,13 +6,14 @@ const Evento=require('../models/Evento');
 
 const getEventos= async(req, res=response)=>{
     //console.log(req);
-    const eventos=await Evento.find().populate('user', 'name');
+    const eventos=await Evento.find().populate('user', 'name').lean().exec();
+
     console.log("estos son los eventos ", eventos);
        
-        res.json({
+        return res.json({
             Ok:true,
             msg:'eventos',
-            eventos
+            eventos: [...eventos]
         })
    
         //console.log(eventos);
@@ -29,7 +30,7 @@ const crearEvento= async(req, res=response)=>{
        res.status(201).json({
         Ok:true,
         msg:'event created',
-        evento:evento
+        evento:evento.id
     })
     } catch (error) {
         console.log(error);
@@ -40,6 +41,7 @@ const crearEvento= async(req, res=response)=>{
     }
 }
 const actualizarEvento=async (req, res=response)=>{
+    console.log(req.params.id);
     const eventoId=req.params.id;
     const uid=req.uid;
     try {
@@ -83,21 +85,21 @@ const eliminarEvento=async (req, res=response)=>{
 
         if ( !evento ) {
             return res.status(404).json({
-                ok: false,
+                Ok: false,
                 msg: 'No existe el evento'
             });
         }
 
         if ( evento.user.toString() !== uid ) {
             return res.status(401).json({
-                ok: false,
+                Ok: false,
                 msg: 'No tiene privilegio de eliminar este evento'
             });
         }
 
         await Evento.findByIdAndDelete( eventoId );
 
-        res.json({ ok: true,
+        res.json({ Ok: true,
             msg:'Evento eliminado' });
         
     } catch (error) {

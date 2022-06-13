@@ -54,6 +54,7 @@ const createUser= async(req, res=express.response)=>{
 }
 const loginUser=async (req, res=response)=>{
     const {email, password}=req.body;
+    console.log(email);
     try {//comprobación de email
         let usuario= await Usuario.findOne({email});
         if(!usuario){
@@ -74,7 +75,7 @@ const loginUser=async (req, res=response)=>{
         res.json({
             Ok:true,
             msg:'Login',
-            uid:usuario.id,
+            uid:usuario._id,
             name:usuario.name,
             token:token
         })
@@ -94,7 +95,9 @@ const revalidarToken= async(req, res=response)=>{
     res.json({
         Ok:true,
         msg:'Revalidar token',
-        token:token
+        token:token,
+        name:name,
+        uid:uid
     })
 
 }

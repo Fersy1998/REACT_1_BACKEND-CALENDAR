@@ -9,7 +9,7 @@ const app=express();
 dbConnection()
 
 //CORS
-/app.use(cors());
+app.use(cors());
 
 
 //Lectura y parseo del body 
